@@ -6,11 +6,11 @@ DSL based assertion API to assert HTML path and content
 Given a HTML String, this API is made to help you asserting the content of the HTML
 
  e.g.
-  <table id="mytable">
-    <tr class="someclass">
-      <td class="someclass" id="sometd">content</td>
-    </tr>
-  </table>
+  &lt;table id="mytable"&gt;
+    &lt;tr class="someclass"&gt;
+      &lt;td class="someclass" id="sometd"&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
 
   Will be asserted by
   String html = ... // content above
