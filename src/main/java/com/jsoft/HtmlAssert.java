@@ -48,7 +48,7 @@ public class HtmlAssert {
 
   public HtmlAssert div() {
     int pos = html.toLowerCase().indexOf("<div>");
-    return assertTagPosition(pos);
+    return assertTagPosition(pos, "<div>".length());
   }
 
   public HtmlAssert div(final String... attributes) {
@@ -77,18 +77,18 @@ public class HtmlAssert {
 
       if (hashMapsAreEqual(attributesMap, matchedAttributesMap)) {
         int pos = tagsMatcher.start();
-        return assertTagPosition(pos);
+        return assertTagPosition(pos, currentTag.length());
       }
     }
-    return assertTagPosition(-1);
+    return assertTagPosition(-1, -1);
   }
 
-  private HtmlAssert assertTagPosition(final int position) {
+  private HtmlAssert assertTagPosition(final int position, final int length) {
     if (parsing == Parsing.STRICT && position == 0) {
-      return new HtmlAssert(html.substring(position + "<div>".length()), parsing);
+      return new HtmlAssert(html.substring(position + length), parsing);
     }
     if (parsing == Parsing.LENIENT && position > -1) {
-      return new HtmlAssert(html.substring(position + "<div>".length()), parsing);
+      return new HtmlAssert(html.substring(position + length), parsing);
     }
     throw new AssertionError("<div> is not present");
   }

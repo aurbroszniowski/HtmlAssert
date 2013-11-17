@@ -173,4 +173,6 @@ public class HtmlAssertTest {
     htmlAssert.div("id", "someid", "class", "someclass");
   }
 
+  //TODO: try static attributes ?
+  //TODO: add other than div
 }
