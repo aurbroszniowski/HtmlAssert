@@ -4,16 +4,18 @@ package com.jsoft;
 import org.junit.Test;
 
 /**
+ *   //TODO: try static attributes ?
+ *
  * @author Aurelien Broszniowski
  */
 public class HtmlAssertTest {
 
   @Test
   public void testPassingDiv() {
-    String html = "<div><div id=\"someid\" class=\"someclass\" hidden><div class=\"someclass\" ><div></div></div></div></div>";
+    String html = "<div><div id=\"someid\" class=\"someclass\" hidden><div class=\"someclass\" ><div><table></table></div></div></div></div>";
     HtmlAssert htmlAssert = new HtmlAssert(html);
 
-    htmlAssert.div("id", "someid", "class", "someclass", "hidden", null).div("class", "someclass");
+    htmlAssert.div("id", "someid", "class", "someclass", "hidden", null).div("class", "someclass").table();
     htmlAssert.div("hidden", null, "class", "someclass", "id", "someid");
   }
 
@@ -173,6 +175,4 @@ public class HtmlAssertTest {
     htmlAssert.div("id", "someid", "class", "someclass");
   }
 
-  //TODO: try static attributes ?
-  //TODO: add other than div
 }

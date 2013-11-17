@@ -46,51 +46,68 @@ public class HtmlAssert {
     this(html, Parsing.LENIENT);
   }
 
+  public HtmlAssert table() {
+    return tag("table");
+  }
+
+  public HtmlAssert table(final String... attributes) {
+    return tag("table", attributes);
+  }
+
   public HtmlAssert div() {
-    int pos = html.toLowerCase().indexOf("<div>");
-    return assertTagPosition(pos, "<div>".length());
+    return tag("div");
   }
 
   public HtmlAssert div(final String... attributes) {
+    return tag("div", attributes);
+  }
+
+  private HtmlAssert tag(final String tag) {
+    String fullTag = "<" + tag + ">";
+    int pos = html.toLowerCase().indexOf(fullTag);
+    return assertTagPosition(fullTag, pos, fullTag.length());
+  }
+
+  private HtmlAssert tag(final String tag, final String... attributes) {
     if ((attributes.length % 2) == 1) {
-      throw new AssertionError("div attributes should be defined in pair div(\"name\", \"value\", ...)");
+      throw new AssertionError(tag + " attributes should be defined in pair " + tag + "(\"name\", \"value\", ...)");
     }
     Map<String, String> attributesMap = new HashMap<String, String>();
     for (int i = 0; i < attributes.length; i += 2) {
       final String attributeName = attributes[i];
-      final String attributeValue = attributes[i+1];
+      final String attributeValue = attributes[i + 1];
       attributesMap.put(attributeName, attributeValue);
     }
 
-    Pattern tagsPattern = Pattern.compile("(<div.*?>)");
+    Pattern tagsPattern = Pattern.compile("(<" + tag + ".*?>)");
     Matcher tagsMatcher = tagsPattern.matcher(html);
     while (tagsMatcher.find()) {
       Map<String, String> matchedAttributesMap = new HashMap<String, String>();
-      String currentTag = html.substring(tagsMatcher.start(), tagsMatcher.end());  // id="ss" class="cdcd" char=ssj
+      String currentTag = html.substring(tagsMatcher.start(), tagsMatcher.end());
       Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*(\\w+)\"*)*");
       Matcher attributesMatcher = attributesPattern.matcher(currentTag);
       while (attributesMatcher.find()) {
-        if (!attributesMatcher.group(0).equalsIgnoreCase("div")) {
+        if (!attributesMatcher.group(0).equalsIgnoreCase(tag)) {
           matchedAttributesMap.put(attributesMatcher.group(1), attributesMatcher.group(3));
         }
       }
 
       if (hashMapsAreEqual(attributesMap, matchedAttributesMap)) {
         int pos = tagsMatcher.start();
-        return assertTagPosition(pos, currentTag.length());
+        return assertTagPosition("<" + tag + ">", pos, currentTag.length());
       }
     }
-    return assertTagPosition(-1, -1);
+    return assertTagPosition("<" + tag + ">", -1, -1);
   }
 
-  private HtmlAssert assertTagPosition(final int position, final int length) {
+  private HtmlAssert assertTagPosition(final String tag, final int position, final int length) {
     if (parsing == Parsing.STRICT && position == 0) {
       return new HtmlAssert(html.substring(position + length), parsing);
     }
     if (parsing == Parsing.LENIENT && position > -1) {
       return new HtmlAssert(html.substring(position + length), parsing);
     }
-    throw new AssertionError("<div> is not present");
+    throw new AssertionError(tag + " is not present");
   }
 
   private boolean hashMapsAreEqual(final Map<String, String> map1, final Map<String, String> map2) {
