@@ -4,7 +4,7 @@ package com.jsoft;
 import org.junit.Test;
 
 /**
- *   //TODO: try static attributes ?
+ * //TODO: try static attributes ?
  *
  * @author Aurelien Broszniowski
  */
@@ -17,6 +17,14 @@ public class HtmlAssertTest {
 
     htmlAssert.div("id", "someid", "class", "someclass", "hidden", null).div("class", "someclass").table();
     htmlAssert.div("hidden", null, "class", "someclass", "id", "someid");
+  }
+
+  @Test
+  public void testAttributeWithSpaces() {
+    String html = " <td class=\"main_column main_column1\" accesskey title=\"ar\" style=\"min-width: 166px; width: 166px; max-width: 166px;\"></td>";
+    HtmlAssert htmlAssert = new HtmlAssert(html);
+
+    htmlAssert.td("class", "main_column main_column1", "title", "ar", "style", "min-width: 166px; width: 166px; max-width: 166px;", "accesskey", null);
   }
 
 

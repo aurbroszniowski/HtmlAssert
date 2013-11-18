@@ -46,21 +46,46 @@ public class HtmlAssert {
     this(html, Parsing.LENIENT);
   }
 
-  public HtmlAssert table() {
-    return tag("table");
+  /**
+   * Tags
+   */
+  public HtmlAssert a(final String... attributes) {
+    return tag("a", attributes);
+  }
+
+  public HtmlAssert b(final String... attributes) {
+    return tag("b", attributes);
+  }
+
+  public HtmlAssert br(final String... attributes) {
+    return tag("br", attributes);
+  }
+
+  public HtmlAssert div(final String... attributes) {
+    return tag("div", attributes);
+  }
+
+  public HtmlAssert span(final String... attributes) {
+    return tag("span", attributes);
   }
 
   public HtmlAssert table(final String... attributes) {
     return tag("table", attributes);
   }
 
-  public HtmlAssert div() {
-    return tag("div");
+  public HtmlAssert td(final String... attributes) {
+    return tag("td", attributes);
   }
 
-  public HtmlAssert div(final String... attributes) {
-    return tag("div", attributes);
+  public HtmlAssert th(final String... attributes) {
+    return tag("th", attributes);
   }
+
+  public HtmlAssert tr(final String... attributes) {
+    return tag("tr", attributes);
+  }
+
+  //**********************************************************
 
   private HtmlAssert tag(final String tag) {
     String fullTag = "<" + tag + ">";
@@ -69,6 +94,10 @@ public class HtmlAssert {
   }
 
   private HtmlAssert tag(final String tag, final String... attributes) {
+    if (attributes.length == 0) {
+      return tag(tag);
+    }
+
     if ((attributes.length % 2) == 1) {
       throw new AssertionError(tag + " attributes should be defined in pair " + tag + "(\"name\", \"value\", ...)");
     }
@@ -84,11 +113,16 @@ public class HtmlAssert {
     while (tagsMatcher.find()) {
       Map<String, String> matchedAttributesMap = new HashMap<String, String>();
       String currentTag = html.substring(tagsMatcher.start(), tagsMatcher.end());
-      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*(\\w+)\"*)*");
+      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:; ]+\"*)*");
       Matcher attributesMatcher = attributesPattern.matcher(currentTag);
       while (attributesMatcher.find()) {
         if (!attributesMatcher.group(0).equalsIgnoreCase(tag)) {
-          matchedAttributesMap.put(attributesMatcher.group(1), attributesMatcher.group(3));
+          String[] attrs = attributesMatcher.group(0).replace("\"", "").replace("\'", "").split("=");
+          if (attrs.length == 2) {
+            matchedAttributesMap.put(attrs[0], attrs[1]);
+          } else {
+            matchedAttributesMap.put(attrs[0], null);
+          }
         }
       }
 
