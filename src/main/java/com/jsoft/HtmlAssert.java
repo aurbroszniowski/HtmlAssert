@@ -113,7 +113,7 @@ public class HtmlAssert {
     while (tagsMatcher.find()) {
       Map<String, String> matchedAttributesMap = new HashMap<String, String>();
       String currentTag = html.substring(tagsMatcher.start(), tagsMatcher.end());
-      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:; ]+\"*)*");
+      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:\\+\\.\\(\\); ]+\"*)*");
       Matcher attributesMatcher = attributesPattern.matcher(currentTag);
       while (attributesMatcher.find()) {
         if (!attributesMatcher.group(0).equalsIgnoreCase(tag)) {

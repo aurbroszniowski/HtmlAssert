@@ -21,10 +21,20 @@ public class HtmlAssertTest {
 
   @Test
   public void testAttributeWithSpaces() {
-    String html = " <td class=\"main_column main_column1\" accesskey title=\"ar\" style=\"min-width: 166px; width: 166px; max-width: 166px;\"></td>";
+    String html = " <td class=\"main_column main_column1\" title=\"1.26e+3k  (1257592)\" accesskey title=\"ar\" style=\"min-width: 166px; width: 166px; max-width: 166px;\"></td>";
     HtmlAssert htmlAssert = new HtmlAssert(html);
 
     htmlAssert.td("class", "main_column main_column1", "title", "ar", "style", "min-width: 166px; width: 166px; max-width: 166px;", "accesskey", null);
+  }
+
+  @Test
+  public void testSimilarMultipleLines() {
+    String html = "<tr><div class=\"somediv\"><tr><span id=\"someid\"><div id=\"id1\"><td></td></div></span></tr><div>" +
+                  "<div class=\"somediv\"><tr><span id=\"someid\"><div id=\"id2\"><td></td></div></span></tr><div>" +
+                  "<div class=\"somediv\"><tr><span id=\"someid\"><div id=\"id3\"><td></td></div></span></tr><div></tr>";
+
+    HtmlAssert htmlAssert = new HtmlAssert(html);
+    htmlAssert.tr().div("class", "somediv").tr().span("id", "someid").div("id", "id2");
   }
 
 
