@@ -3,6 +3,17 @@ HtmlAssert
 
 DSL based assertion API to assert HTML path and content
 
+
+Installation
+------------
+
+  ```
+  mvn install
+  ```
+
+Usage
+-----
+
 Given a HTML String, this API is made to help you asserting the content of the HTML
 
  e.g.<br/>
