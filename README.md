@@ -7,40 +7,48 @@ Given a HTML String, this API is made to help you asserting the content of the H
 
  e.g.<br/>
   ```
-  &lt;table id="mytable"&gt;<br/>
-    &lt;tr class="someclass"&gt;<br/>
-      &lt;td class="someclass" id="sometd"&gt;content&lt;/td&gt;<br/>
-    &lt;/tr&gt;<br/>
-  &lt;/table&gt;<br/>
+  <table id="mytable">
+    <tr class="someclass">
+      <td class="someclass" id="sometd">content</td>
+    </tr>
+  </table>
   ```
 
   Will be asserted by <br/>
   ```
-  String html = ... // content above <br/>
-  HtmlAssert htmlAssert = new HtmlAssert(html); <br/>
-  htmlAssert.table("id","mytable").tr("class","someclass").td("class","someclass", "id","sometd").text("content"); <br/>
+  String html = ... // content above
+  HtmlAssert htmlAssert = new HtmlAssert(html);
+  htmlAssert.table("id","mytable")
+            .tr("class","someclass")
+            .td("class","someclass", "id","sometd")
+            .text("content");
   ```
 
  You have two modes : LENIENT and STRICT <br/>
   ```
-  HtmlAssert htmlAssert = new HtmlAssert(html, Parsing.LENIENT); <br/>
-  HtmlAssert htmlAssert = new HtmlAssert(html, Parsing.STRICT); <br/>
+  HtmlAssert htmlAssert = new HtmlAssert(html, Parsing.LENIENT);
+  HtmlAssert htmlAssert = new HtmlAssert(html, Parsing.STRICT);
   ```
 
  In LENIENT mode, all parameters are optional, in case they are blank, HtmlAssert will try to find itself the path, <br/>
   e.g. the following will work similarly: <br/>
   ```
-  htmlAssert.table().tr().td().text("content"); <br/>
-  htmlAssert.text("content"); <br/>
+  htmlAssert.table().tr().td().text("content");
+  htmlAssert.text("content");
   ```
 
  In STRICT mode, the whole path must be defined, <br/>
   e.g. the following will work: <br/>
   ```
-  htmlAssert.table("id","mytable").tr("class","someclass").td("class","someclass", "id","sometd").text("content"); <br/>
+  htmlAssert.table("id","mytable")
+            .tr("class","someclass")
+            .td("class","someclass", "id","sometd")
+            .text("content");
   ```
   but not this, because it is missing the "table" tag <br/>
   ```
-  htmlAssert.tr("class","someclass").td("class","someclass", "id","sometd").text("content"); <br/>
+  htmlAssert.tr("class","someclass")
+            .td("class","someclass", "id","sometd")
+            .text("content");
   ```
 
