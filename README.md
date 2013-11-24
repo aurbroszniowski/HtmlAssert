@@ -11,6 +11,14 @@ Installation
   mvn install
   ```
 
+  ```
+  <dependency>
+    <groupId>com.jsoft</groupId>
+     <artifactId>htmlassert</artifactId>
+     <version>1.0-SNAPSHOT</version>
+  </dependency>
+  ```
+
 Usage
 -----
 
