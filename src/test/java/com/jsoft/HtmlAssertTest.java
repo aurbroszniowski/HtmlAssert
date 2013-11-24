@@ -32,11 +32,25 @@ public class HtmlAssertTest {
     String htmlSingleLine = "<div>           <td title=\"en-gb\"                 style=\"166px;\">en-gb</td></div>\n";
     HtmlAssert htmlAssert = new HtmlAssert(html);
 
-    Pattern p = Pattern.compile("gb.*style", Pattern.MULTILINE);
-    Matcher m = p.matcher(html);
+    String tag = "td";
+    Pattern tagsPattern = Pattern.compile("(<" + tag + ".*?>)", Pattern.DOTALL);
+    Matcher m = tagsPattern.matcher(html);
+    int nbTags = 0;
     while (m.find()) {
-      System.out.println(htmlSingleLine.substring(m.start(), m.end()));
+      String currentTag = html.substring(m.start(), m.end());
+      System.out.println(currentTag);
+      nbTags++;
+
+      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:\\+\\.\\(\\); ]+\"*)*", Pattern.MULTILINE);
+      Matcher attributesMatcher = attributesPattern.matcher(currentTag);
+      int attributesCnt = 0;
+      while (attributesMatcher.find()) {
+        System.out.println(attributesMatcher.group(0));
+        attributesCnt++;
+      }
+      Assert.assertEquals(3, attributesCnt);
     }
+    Assert.assertEquals(1, nbTags);
 
 //    htmlAssert.td("title", "en-gb", "style", "166px;");
   }
