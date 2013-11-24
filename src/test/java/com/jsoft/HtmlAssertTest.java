@@ -2,6 +2,7 @@ package com.jsoft;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -260,5 +261,37 @@ public class HtmlAssertTest {
     Assert.assertFalse(new HtmlAssert("").hashMapsAreEqual(map1, map2));
   }
 
+  @Test
+  public void testTextIsPresent() {
+    String html ="<div><tr>content</tr></div>";
+
+  }
+
+  @Ignore
+  @Test
+  public void testTextValue() {
+    String html ="<div><tr>content</tr></div>";
+
+    HtmlAssert htmlAssert = new HtmlAssert(html);
+    htmlAssert.div().text("content");
+  }
+
+  @Ignore
+  @Test(expected = AssertionError.class)
+  public void testTextValueIsHtmlTag() {
+    String html ="<div><tr>content</tr></div>";
+
+    HtmlAssert htmlAssert = new HtmlAssert(html);
+    htmlAssert.div().text("tr");
+  }
+
+  @Ignore
+  @Test(expected = AssertionError.class)
+  public void testTextValueIsAttribute() {
+    String html ="<div><tr class=\"someattr\">content</tr></div>";
+
+    HtmlAssert htmlAssert = new HtmlAssert(html);
+    htmlAssert.div().text("someattr");
+  }
 
 }

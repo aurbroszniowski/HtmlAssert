@@ -84,6 +84,11 @@ public class HtmlAssert {
     return tag("tr", attributes);
   }
 
+  // plain text
+  public HtmlAssert text(final String text) {
+    throw new UnsupportedOperationException("To implement");
+  }
+
   //**********************************************************
 
   private HtmlAssert tag(final String tag) {
