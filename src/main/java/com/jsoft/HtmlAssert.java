@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
  * htmlAssert.table().tr().td().text("content");
  * htmlAssert.text("content");
  * <p/>
- * TODO : Add a strict mode to make sure that the path MUST follow the exact definition
  *
  * @author Aurelien Broszniowski
  */
