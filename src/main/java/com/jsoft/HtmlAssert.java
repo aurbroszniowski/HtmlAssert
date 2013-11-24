@@ -108,12 +108,12 @@ public class HtmlAssert {
       attributesMap.put(attributeName, attributeValue);
     }
 
-    Pattern tagsPattern = Pattern.compile("(<" + tag + ".*?>)");
+    Pattern tagsPattern = Pattern.compile("(<" + tag + ".*?>)", Pattern.DOTALL);
     Matcher tagsMatcher = tagsPattern.matcher(html);
     while (tagsMatcher.find()) {
       Map<String, String> matchedAttributesMap = new HashMap<String, String>();
       String currentTag = html.substring(tagsMatcher.start(), tagsMatcher.end());
-      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:\\+\\.\\(\\); ]+\"*)*");
+      Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:\\+\\.\\(\\); ]+\"*)*", Pattern.MULTILINE);
       Matcher attributesMatcher = attributesPattern.matcher(currentTag);
       while (attributesMatcher.find()) {
         if (!attributesMatcher.group(0).equalsIgnoreCase(tag)) {
@@ -144,13 +144,18 @@ public class HtmlAssert {
     throw new AssertionError(tag + " is not present");
   }
 
-  private boolean hashMapsAreEqual(final Map<String, String> map1, final Map<String, String> map2) {
+  protected boolean hashMapsAreEqual(final Map<String, String> map1, final Map<String, String> map2) {
     if (map1.size() != map2.size()) {
       return false;
     }
     for (String s : map1.keySet()) {
       if (map1.get(s) == null) {
         if (map2.get(s) != null) {
+          return false;
+        }
+      } else if (map1.get(s).contains("*")) {
+        String value1 = Pattern.quote(map1.get(s)).replace("*", "\\E.*\\Q");
+        if (!Pattern.matches(value1, map2.get(s))) {
           return false;
         }
       } else if (!map1.get(s).equalsIgnoreCase(map2.get(s))) {

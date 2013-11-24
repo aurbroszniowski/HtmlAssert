@@ -1,7 +1,13 @@
 package com.jsoft;
 
 
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * //TODO: try static attributes ?
@@ -17,6 +23,22 @@ public class HtmlAssertTest {
 
     htmlAssert.div("id", "someid", "class", "someclass", "hidden", null).div("class", "someclass").table();
     htmlAssert.div("hidden", null, "class", "someclass", "id", "someid");
+  }
+
+  @Test
+  public void testAttributeMultipleLines() {
+    String html = " <div>           <td title=\"en-gb\"\n" +
+                  "                style=\"166px;\">en-gb</td></div>\n";
+    String htmlSingleLine = "<div>           <td title=\"en-gb\"                 style=\"166px;\">en-gb</td></div>\n";
+    HtmlAssert htmlAssert = new HtmlAssert(html);
+
+    Pattern p = Pattern.compile("gb.*style", Pattern.MULTILINE);
+    Matcher m = p.matcher(html);
+    while (m.find()) {
+      System.out.println(htmlSingleLine.substring(m.start(), m.end()));
+    }
+
+//    htmlAssert.td("title", "en-gb", "style", "166px;");
   }
 
   @Test
@@ -192,5 +214,37 @@ public class HtmlAssertTest {
     HtmlAssert htmlAssert = new HtmlAssert(html);
     htmlAssert.div("id", "someid", "class", "someclass");
   }
+
+
+  @Test
+  public void testHashMapsEqualWithWildcard() {
+    Map<String, String> map1 = new HashMap<String, String>();
+    map1.put("key1", "value1");
+    map1.put("key2", "val*2");
+    map1.put("key3", "val*3 is* value");
+    map1.put("key4", "*  (107807613)");
+
+    Map<String, String> map2 = new HashMap<String, String>();
+    map2.put("key1", "value1");
+    map2.put("key2", "value2");
+    map2.put("key3", "value3 is a value");
+    map2.put("key4", "1.61e+4k  (107807613)");
+
+    Assert.assertTrue(new HtmlAssert("").hashMapsAreEqual(map1, map2));
+  }
+
+  @Test
+  public void testHashMapsNotEqualWithWildcard() {
+    Map<String, String> map1 = new HashMap<String, String>();
+    map1.put("key1", "value1");
+    map1.put("key2", "val*3 is* value");
+
+    Map<String, String> map2 = new HashMap<String, String>();
+    map2.put("key1", "value1");
+    map2.put("key2", "value2 is a value");
+
+    Assert.assertFalse(new HtmlAssert("").hashMapsAreEqual(map1, map2));
+  }
+
 
 }
