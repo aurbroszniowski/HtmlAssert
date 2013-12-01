@@ -3,7 +3,11 @@ package com.jsoft;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Aurelien Broszniowski
@@ -23,7 +27,7 @@ public class HtmlAssertDom {
     if (html == null) {
       throw new NullPointerException("Can not Assert null HTML content");
     }
-    Document doc = Jsoup.parse(html);
+    Document doc = Jsoup.parse(html, "", Parser.xmlParser());
     Elements select = doc.select("*");
     node = select.first();
     this.parsing = parsing;
@@ -33,12 +37,56 @@ public class HtmlAssertDom {
     this(html, Parsing.LENIENT);
   }
 
+  public static void it(String description, HtmlAssertDom htmlAssertDom) {
+
+  }
+
+  public static void describe(String description, HtmlAssertDom htmlAssertDom) {
+
+  }
+
   /**
    * Tags
    */
+  public HtmlAssertDom a(final String... attributes) {
+    return tag("a", attributes);
+  }
+
+  public HtmlAssertDom b(final String... attributes) {
+    return tag("b", attributes);
+  }
+
+  public HtmlAssertDom br(final String... attributes) {
+    return tag("br", attributes);
+  }
 
   public HtmlAssertDom div(final String... attributes) {
     return tag("div", attributes);
+  }
+
+  public HtmlAssertDom span(final String... attributes) {
+    return tag("span", attributes);
+  }
+
+  public HtmlAssertDom table(final String... attributes) {
+    return tag("table", attributes);
+  }
+
+  public HtmlAssertDom td(final String... attributes) {
+    return tag("td", attributes);
+  }
+
+  public HtmlAssertDom th(final String... attributes) {
+    return tag("th", attributes);
+  }
+
+  public HtmlAssertDom tr(final String... attributes) {
+    return tag("tr", attributes);
+  }
+
+  // plain text
+  public HtmlAssert text(final String text) {
+    throw new UnsupportedOperationException("To implement");
   }
 
   private HtmlAssertDom tag(final String tag, final String... attributes) {
@@ -49,8 +97,15 @@ public class HtmlAssertDom {
     if ((attributes.length % 2) == 1) {
       throw new AssertionError(tag + " attributes should be defined in pair " + tag + "(\"name\", \"value\", ...)");
     }
+    Map<String, String> attributesMap = new HashMap<String, String>();
+    for (int i = 0; i < attributes.length; i += 2) {
+      final String attributeName = attributes[i];
+      final String attributeValue = attributes[i + 1];
+      attributesMap.put(attributeName, attributeValue);
+    }
 
-    return assertTagPosition("<" + tag + ">", -1, this.node);
+    TagsFinder.TraverseResult result = tagsFinder.traverse(node, tag, attributesMap);
+    return assertTagPosition("<" + tag + ">", result.getPosition(), result.getNode());
   }
 
   private HtmlAssertDom tag(final String tag) {
