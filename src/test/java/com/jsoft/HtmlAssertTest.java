@@ -39,21 +39,19 @@ public class HtmlAssertTest {
     int nbTags = 0;
     while (m.find()) {
       String currentTag = html.substring(m.start(), m.end());
-      System.out.println(currentTag);
       nbTags++;
 
       Pattern attributesPattern = Pattern.compile("(\\w+)(\\=\"*[a-zA-Z0-9_\\-\\:\\+\\.\\(\\); ]+\"*)*", Pattern.MULTILINE);
       Matcher attributesMatcher = attributesPattern.matcher(currentTag);
       int attributesCnt = 0;
       while (attributesMatcher.find()) {
-        System.out.println(attributesMatcher.group(0));
         attributesCnt++;
       }
       Assert.assertEquals(3, attributesCnt);
     }
     Assert.assertEquals(1, nbTags);
 
-//    htmlAssert.td("title", "en-gb", "style", "166px;");
+    htmlAssert.td("title", "en-gb", "style", "166px;");
   }
 
   @Test
@@ -80,28 +78,28 @@ public class HtmlAssertTest {
   @Test
   public void testPassingLenientEmptyDiv() {
     String html = "<dZv><div></div></dZv>";
-    HtmlAssert htmlAssert = new HtmlAssert(html);
+    HtmlAssertDom htmlAssert = new HtmlAssertDom(html);
     htmlAssert.div();
   }
 
   @Test
   public void testPassingStrictEmptyDiv() {
     String html = "<div><div></div></div>";
-    HtmlAssert htmlAssert = new HtmlAssert(html);
+    HtmlAssertDom htmlAssert = new HtmlAssertDom(html);
     htmlAssert.div();
   }
 
   @Test(expected = AssertionError.class)
   public void testFailingLenientEmptyDiv() {
     String html = "<dZv></dZv>";
-    HtmlAssert htmlAssert = new HtmlAssert(html, Parsing.LENIENT);
+    HtmlAssertDom htmlAssert = new HtmlAssertDom(html, Parsing.LENIENT);
     htmlAssert.div();
   }
 
   @Test(expected = AssertionError.class)
   public void testFailingStrictEmptyDiv() {
     String html = "<dZv><div></div></dZv>";
-    HtmlAssert htmlAssert = new HtmlAssert(html, Parsing.STRICT);
+    HtmlAssertDom htmlAssert = new HtmlAssertDom(html, Parsing.STRICT);
     htmlAssert.div();
   }
 
